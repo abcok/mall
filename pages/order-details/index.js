@@ -1,26 +1,13 @@
 var app = getApp();
 Page({
     data:{
-      orderId:0,
-        goodsList:[
-            {
-                pic:'/images/goods02.png',
-                name:'爱马仕（HERMES）大地男士最多两行文字超出就这样显…',
-                price:'300.00',
-                label:'大地50ml',
-                number:2
-            },
-            {
-                pic:'/images/goods02.png',
-                name:'爱马仕（HERMES）大地男士最多两行文字超出就这样显…',
-                price:'300.00',
-                label:'大地50ml',
-                number:2
-            }
-        ],
-        yunPrice:"10.00"
+        orderId:0,
+        goodsList:[],
+        yunPrice: app.globalData.yunPrice,
+        orderDesc: app.globalData.loacal
     },
     onLoad:function(e){
+      console.log("onLoad=", e.id)
       var orderId = e.id;
       this.data.orderId = orderId;
       this.setData({
@@ -29,77 +16,39 @@ Page({
     },
     onShow : function () {
       var that = this;
+      console.log(this.data)
       wx.request({
-        url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/detail',
-        data: {
-          token: app.globalData.token,
-          id: that.data.orderId
-        },
+        url: 'https://www.aigeming.com/order?&orderid=' + that.data.orderId,
         success: (res) => {
           wx.hideLoading();
-          if (res.data.code != 0) {
+          console.log("single order:", res)
+          if (res.data.ec != 0) {
             wx.showModal({
               title: '错误',
-              content: res.data.msg,
+              content: "获取订单失败",
               showCancel: false
             })
             return;
           }
+
+          console.log("aaaa:", res.data.data)
+          var info = res.data.data[0]
+          var yunPrice = info.fare;
+            var goods_price = (parseInt(info.goods_price)/100.0).toFixed(2)
+            var allprice = info.total_rmb;
+          console.log("yunPrice:", yunPrice, "; allPrice=", allprice)
           that.setData({
-            orderDetail: res.data.data
+            allGoodsPrice: goods_price,
+            yunPrice: yunPrice,
+            totalPrice: allprice,
+            username: info.username,
+            roomid: info.roomid,
+            phone: info.phone,
+            isSend: info.send_room,
           });
         }
       })
-      var yunPrice = parseFloat(this.data.yunPrice);
-      var allprice = 0;
-      var goodsList = this.data.goodsList;
-      for (var i = 0; i < goodsList.length; i++) {
-        allprice += parseFloat(goodsList[0].price) * goodsList[0].number;
-      }
-      this.setData({
-        allGoodsPrice: allprice,
-        yunPrice: yunPrice
-      });
+      
     },
-    wuliuDetailsTap:function(){
-        wx.navigateTo({
-                url:"/pages/wuliu/index"
-        })
-    },
-    confirmBtnTap:function(e){
-      var that = this;
-      var orderId = e.currentTarget.dataset.id;
-      wx.showModal({
-          title: '确认您已收到商品？',
-          content: '',
-          success: function(res) {
-            if (res.confirm) {
-              wx.showLoading();
-              wx.request({
-                url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/delivery',
-                data: {
-                  token: app.globalData.token,
-                  orderId: orderId
-                },
-                success: (res) => {
-                  wx.request({
-                    url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/reputation',
-                    data: {
-                      token: app.globalData.token,
-                      orderId: orderId,
-                      reputation:2
-                    },
-                    success: (res) => {
-                      wx.hideLoading();
-                      if (res.data.code == 0) {
-                        that.onShow();
-                      }
-                    }
-                  })
-                }
-              })
-            }
-          }
-      })
-    }
+  
 })

@@ -124,7 +124,7 @@ Page({
             total+= parseFloat(curItem.price)*curItem.number;
           }
       }
-      return total;
+      return total.toFixed(2);
    },
    allSelect:function(){
       var list = this.data.goodsList.list;
@@ -165,6 +165,7 @@ Page({
           list:list
         }
       });
+      console.log("set good list:", allSelect, noSelect, total)
       var shopCarInfo = {};
       var tempNumber = 0;
       shopCarInfo.shopList = list;
@@ -245,6 +246,7 @@ Page({
      this.setGoodsList(this.getSaveHide(),this.totalPrice(),this.allSelect(),this.noSelect(),list);
     },
     toPayOrder:function(){
+      console.log("to pay order")
       wx.showLoading();
       var that = this;
       if (this.data.goodsList.noSelect) {
@@ -308,6 +310,7 @@ Page({
                 wx.hideLoading();
                 return;
               }*/
+              console.log("create order:", needDoneNUmber, doneNumber)
               if (needDoneNUmber == doneNumber) {
                 that.navigateToPayOrder();
               }

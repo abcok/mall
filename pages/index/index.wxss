@@ -109,6 +109,10 @@ swiper-item image {
   color:#e64340;
   margin-left: 24rpx;
 }
+.goods-box .goods-price .goods-price-sel{
+   text-decoration: line-through;
+   padding: 0rpx 20rpx;
+}
 .no-more-goods{
   text-align: center;
   font-size: 24rpx;

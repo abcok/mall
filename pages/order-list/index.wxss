@@ -7,9 +7,17 @@
     height: 88rpx;
     line-height: 88rpx;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     background-color: #fff;
+}
+
+.status-box .type-navbar{
+  white-space: nowrap;
+  display: flex;
+  height: 88rpx;
+  background-color: #fff;
+  justify-content: space-between;
 }
 .status-box .status-label{
     width: 150rpx;
@@ -19,6 +27,7 @@
     color:#353535;
     box-sizing: border-box;
     position: relative;
+    justify-content: space-between;
 }
 .status-box .status-label.active{
     color:#e64340;
@@ -143,11 +152,15 @@
     border-radius: 6rpx;
     margin-left: 20rpx;
 }
-.a-order .price-box .cancel-btn{
+.a-order .price-box .delete-btn{
     border: 1rpx solid #ccc;
     position: absolute;
     right: 216rpx;
     top:20rpx;
+}
+.a-order .price-box .cancel-btn{
+    border:1px solid #e64340;
+    color: #e64340;
 }
 .a-order .price-box .topay-btn{
     border:1px solid #e64340;

@@ -1,42 +1,79 @@
-function wxpay(app, money, orderId, redirectUrl) {
-  wx.request({
-    url: 'https://api.it120.cc/' + app.globalData.subDomain + '/pay/wxapp/get-pay-data',
-    data: {
-      token:app.globalData.token,
-      money:money,
-      remark:"支付订单 ：" + orderId,
-      payName:"在线支付",
-      nextAction:{type:0, id:orderId}
-    },
-    //method:'POST',
-    success: function(res){
-      console.log('api result:');
-      console.log(res.data);
-      if(res.data.code == 0){
-        // 发起支付
-        wx.requestPayment({
-          timeStamp:res.data.data.timeStamp,
-          nonceStr:res.data.data.nonceStr,
-          package:'prepay_id=' + res.data.data.prepayId,
-          signType:'MD5',
-          paySign:res.data.data.sign,
-          fail:function (aaa) {
-            wx.showToast({title: '支付失败:' + aaa})
-          },
-          success:function () {
-            wx.showToast({title: '支付成功'})
-            wx.reLaunch({
-              url: redirectUrl
-            });
-          }
-        })
-      } else {
-        wx.showToast({title: '服务器忙' + res.data.code})
-      }
-    }
-  })
-}
+function wxpay(app, money, redirectUrl, postData, rmShopCar) {
+    wx.request({
+        url: 'https://www.aigeming.com/payment?openid=' + app.globalData.openid,
+        method: 'POST',
+        header: {
+            'content-type': 'application/x-www-form-urlencoded',
+        },
+        data: postData, // 设置请求的 参数
 
+        success: (res) => {
+            wx.hideLoading();
+            console.log("create:", res.data);
+            if (res.data.code != 0) {
+                wx.showModal({
+                    title: '错误',
+                    content: res.data.msg,
+                    showCancel: false
+                })
+                return;
+            }
+            var payInfo = {
+                timeStamp: res.data.timeStamp,
+                appId: res.data.appId,
+                nonceStr: res.data.nonceStr,
+                sign: res.data.sign,
+                signType: res.data.signType,
+                pacakge: res.data.package,
+                
+            }
+
+            wx.requestPayment({
+                timeStamp: payInfo.timeStamp,
+                nonceStr: payInfo.nonceStr,
+                package: payInfo.pacakge,
+                signType: payInfo.signType,
+                paySign: payInfo.sign,
+                appId: payInfo.appId,
+                success: function(res) {
+                    wx.showToast({
+                        title: '支付成功',
+                    })
+                    if (postData.needgoodsinfo == 0) {
+                        var orderid = postData.orderid
+                        wx.request({
+                            url: 'https://www.aigeming.com/orderstatus?orderid=' + orderid + "&status=" + app.globalData.orderDoneStatus,
+                            success: (res) => {
+                                wx.hideLoading();
+                                
+                            }
+                        })
+                    }
+
+                },
+                fail: function(res) {
+                    console.log("payment fail:", res)
+                    wx.showToast({
+                        title: '支付失败',
+                    })
+                },
+                complete: function(res) {
+                    console.log("complete")
+                }
+
+            })
+
+            // 清空购物车数据
+            if (rmShopCar) {
+                wx.removeStorageSync('shopCarInfo');
+            }
+            // 下单成功，跳转到订单管理界面
+            wx.reLaunch({
+                url: redirectUrl
+            });
+        }
+    })
+}
 module.exports = {
-  wxpay: wxpay
+    wxpay: wxpay
 }

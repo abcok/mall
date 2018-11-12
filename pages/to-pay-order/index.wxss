@@ -128,6 +128,16 @@ form{
     color: #666;
     padding-right: 30rpx;
 }
+.peisong-way .left-text{
+    font-size: 40rpx;
+    color: rgb(151, 129, 231);
+    padding-left: 30rpx;
+}
+.peisong-way .left-text.active{
+    font-size: 40rpx;
+    color: rgb(228, 20, 47);
+    padding-left: 30rpx;
+}
 .peisong-way .liuyan{
     width: 510rpx;
     font-size: 28rpx;

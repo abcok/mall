@@ -1,14 +1,5 @@
 <view class="container">
      <form bindsubmit="createOrder">
-     <view class="address-box" wx:if="{{isNeedLogistics > 0}}">
-        <view class="add-address" hidden="{{curAddressData}}">
-            <view class="title" bindtap="addAddress">新增收货地址</view>
-        </view>
-        <view class="show-address" hidden="{{!curAddressData}}" bindtap="selectAddress">
-            <view class="name-tel">{{curAddressData.linkMan}}  {{curAddressData.mobile}}</view>
-            <view class="addr-text">{{curAddressData.address}}</view>
-        </view>
-     </view>
      <view class="goods-list">
         <view class="list-title">{{mallName}}</view>
         <view class="a-goods" wx:for-items="{{goodsList}}" wx:key="{{index}}">
@@ -28,35 +19,58 @@
         </view>
      </view>
      <view class="peisong-way">
-        <view class="row-box" wx:if="{{isNeedLogistics > 0}}">
+        <view class="row-box" wx:if="{{isNeedLogistics >= 0}}">
             <view class="row-label">配送方式</view>
-            <view class="right-text" wx:if="{{yunPrice > 0}}">顺丰快递</view>
-            <view class="right-text" wx:if="{{yunPrice == 0}}">快递包邮</view>
+            <view class="right-text" wx:if="{{fare == 0}}">快递包邮</view>
         </view>
+        
+        <view class="row-box">
+        <view class="row-label">提货人</view>
+            <view class="right-text">
+                <input name="username" confirm-type="next" selectable="true" type="text" class="liuyan" placeholder="姓名" />
+            </view>
+        </view>
+        <view class="row-box">
+            <view class="row-label">手机号</view>
+            <view class="right-text">
+                <input name="phone" confirm-type="next" type="number" maxlength="11" class="liuyan" placeholder="手机号" />
+            </view>
+        </view>
+        <view class="row-box">
+            <view class="row-label">楼栋信息</view>
+            <view class="right-text">
+                <input name="roomid" confirm-type="done" type="text" class="liuyan" placeholder="例如：4号楼1单元602 或 4-1-602" />
+            </view>
+        </view>
+
         <view class="row-box">
             <view class="row-label">备注</view>
             <view class="right-text">
-                <input name="remark" type="text" class="liuyan" placeholder="如需备注请输入" />
+                <input name="remark" confirm-type="done" type="text" class="liuyan" placeholder="特殊要求" />
             </view>
         </view>
+        <view class="row-box">
+          <switch type='checkbox' bindchange="switchChange"/>
+          <view class="left-text {{fare?'active':''}}" >送货上门（会收取3元派送费）</view>
+       </view>
      </view>
      <view class="goods-info">
-        <view class="row-box" wx:if="{{isNeedLogistics > 0 && yunPrice > 0}}">
+        <view class="row-box" wx:if="{{fare > 0}}">
             <view class="row-label">商品金额</view>
             <view class="right-text">¥ {{allGoodsPrice}}</view>
         </view>
-        <view class="row-box" wx:if="{{isNeedLogistics > 0 && yunPrice > 0}}">
+        <view class="row-box" wx:if="{{fare > 0}}">
             <view class="row-label">运费</view>
-            <view class="right-text">+ ¥ {{yunPrice}}</view>
+            <view class="right-text">+ ¥ {{fare}}</view>
         </view>
         <view class="row-box">
             <view class="row-label">应付总额</view>
-            <view class="right-text">¥ {{allGoodsPrice+yunPrice}}</view>
+            <view class="right-text">¥ {{allGoodsPrice+fare}}</view>
         </view>
      </view>
      <view class="jiesuan-box">
         <view class="left-price">
-            <view class="total">合计：¥ {{allGoodsPrice+yunPrice}}</view>
+            <view class="total">合计：¥ {{allGoodsPrice+fare}}</view>
         </view>
         <button class="to-pay-btn" formType="submit">提交订单</button>
     </view>
