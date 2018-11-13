@@ -1,14 +1,42 @@
 <view class="container">
-
+    <view class="sec-wrap">
+        <view class="order-status">
+            <view class="icon-box">
+                <image class="icon" src="/images/order-details/icon-ddfh.png"></image>
+            </view>
+            <view class='right-text'>
+                <view class='des1'> 提货地点：{{orderDesc}}
+                </view>
+            </view>
+        </view>
+        <view class="order-status">
+            <view class="icon-box">
+                <image class="icon" src="/images/order-details/icon-room.png"></image>
+            </view>
+            <view class='right-text'>
+                <view class='des'> {{username}} {{phone}}
+                    <view>{{roomid}}</view>
+                </view>
+            </view>
+        </view>
+    </view>
     <view class="goods-list">
-        <view class="list-title" hidden='true'>商品信息</view>
-        <view class="a-goods" wx:for-items="{{orderDetail.goods}}" wx:key="{{index}}"> </view>
-        <view class="text-box">提货地点：{{orderDesc}}</view>
-        <view class="text-box">预留信息：</view>
-        <view class="info-box">{{username}} {{phone}}</view>
-        <view class="info-box">{{roomid}}</view>
-
-        <view class="a-goods" wx:for-items="{{orderDetail.goods}}" wx:key="{{index}}"> </view>
+        <view class="list-title">商品信息</view>
+        <view class="a-goods" wx:for-items="{{orderDetail.pinfos}}" wx:key="{{index}}">
+            <view class="img-box">
+                <image src="{{orderDetail.imgs[index]}}" class="img" />
+            </view>
+            <view class="text-box">
+                <view class="arow arow01">
+                    <view class="goods-name">{{orderDetail.titles[index]}}</view>
+                    <view class="goods-price">¥ {{orderDetail.prices[index]}}</view>
+                </view>
+                
+            </view>
+        </view>
+        <view class="btn-row" wx:if="{{orderDetail.orderInfo.status==2}}">
+            <view class="confirm-btn" bindtap="confirmBtnTap" data-id="{{orderDetail.orderInfo.id}}">确认收货</view>
+        </view>
     </view>
 
     <view class="goods-info">

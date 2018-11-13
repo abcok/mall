@@ -4,7 +4,10 @@ Page({
         orderId: 0,
         goodsList: [],
         yunPrice: app.globalData.yunPrice,
-        orderDesc: app.globalData.loacal
+        orderDesc: app.globalData.loacal,
+        titles: [],
+        images: [],
+        orderDetail: {},
     },
    
     onLoad: function(e) {
@@ -33,12 +36,14 @@ Page({
                     })
                     return;
                 }
-
+                console.log("order info:", res.data)
                 var info = res.data.data[0]
                 var yunPrice = info.fare;
+                
                 var goods_price = (parseInt(info.goods_price) / 100.0).toFixed(2)
                 var allprice = info.total_rmb;
                 console.log("yunPrice:", yunPrice, "; allPrice=", allprice)
+                console.log("info:", info)
                 that.setData({
                     allGoodsPrice: goods_price,
                     yunPrice: yunPrice,
@@ -47,6 +52,10 @@ Page({
                     roomid: info.roomid,
                     phone: info.phone,
                     isSend: info.send_room,
+                    titles:info.titles,
+                    images: info.imgs,
+                    prices: info.prices,
+                    orderDetail: info,
                 });
             }
         })

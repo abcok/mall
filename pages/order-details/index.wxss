@@ -51,10 +51,13 @@ page {
 }
 
 .order-status .right-text .des {
-    font-size: 24rpx;
-    color: #999;
+    font-size: 30rpx;
+    color: rgb(192, 109, 32);
 }
-
+.order-status .right-text .des1 {
+    font-size: 30rpx;
+    color: rgb(13, 156, 212);
+}
 .address-sec {
     width: 720rpx;
     margin-left: 30rpx;
@@ -157,11 +160,12 @@ page {
 
 .goods-list .info-box {
     font-size: 28rpx;
-    color: rgb(211, 201, 66);
+    color: rgb(238, 10, 10);
     padding: 30rpx 50rpx 25rpx 100rpx;
     justify-content:center;
     line-height: 0
 }
+
 .goods-list .text-box {
     font-size: 28rpx;
     color: rgb(3, 3, 3);
@@ -274,7 +278,7 @@ page {
 }
 
 .peisong-way .right-text {
-    font-size: 28rpx;
+    font-size: 38rpx;
     color: #666;
     padding-right: 30rpx;
 }

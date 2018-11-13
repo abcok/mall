@@ -83,7 +83,7 @@ App({
         subDomain: "mall",
         yunPrice: 3, //yuan
         hostname: 'https://www.aigeming.com',
-        loacal: "天通苑",
+        loacal: "天通苑 西一区 蓝月亮提货点",
         orderDoneStatus:1,  //订单完成状态
         orderPrepayStatus:2,  //订单待支付状态
         orderDelStatus: 3,  //订单删除状态
