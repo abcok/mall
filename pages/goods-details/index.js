@@ -5,7 +5,6 @@ var WxParse = require('../../wxParse/wxParse.js');
 var addshopcar = require('../../utils/addshopcar.js');
 
 var hostname = 'https://www.aigeming.com'
-//var hostname = 'http://39.105.169.87'
 Page({
     data: {
         autoplay: true,
@@ -46,8 +45,6 @@ Page({
             title: this.data.goodsDetail.title,
             //desc: '小区团购领导者',
             path: '/pages/goods-details/index?id=' + this.data.id
-            //path: '/pages/index/index?id=' + this.data.id
-
         }
     },
     onShow: function(){
@@ -188,80 +185,6 @@ Page({
     addShopCar: function(){
         addshopcar.addshopcar(this.data)
     },
-    /*
-    addShopCar: function() {
-        if (this.data.goodsDetail.properties && !this.data.canSubmit) {
-            this.bindGuiGeTap();
-            return;
-        }
-        if (this.data.buyNumber < 1) {
-            wx.showModal({
-                title: '提示',
-                content: '暂时缺货哦~',
-                showCancel: false
-            })
-            return;
-        }
-        // 加入购物车
-        var shopCarMap = {};
-        shopCarMap.goodsId = this.data.goodsDetail.id;
-        shopCarMap.pic = this.data.goodsDetail.cover[0];
-        shopCarMap.name = this.data.goodsDetail.title;
-        // shopCarMap.label=this.data.goodsDetail.basicInfo.id; 规格尺寸 
-        shopCarMap.propertyChildIds = this.data.propertyChildIds;
-        shopCarMap.label = this.data.propertyChildNames;
-        shopCarMap.price = this.data.selectSizePrice;
-        shopCarMap.left = "";
-        shopCarMap.active = true;
-        shopCarMap.number = 1;
-        //shopCarMap.logisticsType=this.data.goodsDetail.basicInfo.logisticsId;
-
-        var shopCarInfo = this.data.shopCarInfo;
-        if (!shopCarInfo.shopNum) {
-            shopCarInfo.shopNum = 0;
-        }
-        if (!shopCarInfo.shopList) {
-            shopCarInfo.shopList = [];
-        }
-        var hasSameGoodsIndex = -1;
-        for (var i = 0; i < shopCarInfo.shopList.length; i++) {
-            var tmpShopCarMap = shopCarInfo.shopList[i];
-            if (tmpShopCarMap.goodsId == shopCarMap.goodsId && tmpShopCarMap.propertyChildIds == shopCarMap.propertyChildIds) {
-                hasSameGoodsIndex = i;
-                shopCarMap.number = shopCarMap.number + tmpShopCarMap.number;
-                break;
-            }
-        }
-
-        shopCarInfo.shopNum = shopCarInfo.shopNum + 1;
-        if (hasSameGoodsIndex > -1) {
-            shopCarInfo.shopList.splice(hasSameGoodsIndex, 1, shopCarMap);
-        } else {
-            shopCarInfo.shopList.push(shopCarMap);
-        }
-
-        this.setData({
-            shopCarInfo: shopCarInfo,
-            shopNum: shopCarInfo.shopNum
-        });
-
-        // 写入本地存储
-        wx.setStorage({
-            key: "shopCarInfo",
-            data: shopCarInfo
-        })
-        this.closePopupTap();
-        wx.showToast({
-            title: '加入购物车成功',
-            icon: 'success',
-            duration: 2000
-        })
-        //console.log(shopCarInfo);
-
-        //shopCarInfo = {shopNum:12,shopList:[]}
-    },
-    */
-
     goShopCar: function() {
         wx.reLaunch({
             url: "/pages/shop-cart/index"
