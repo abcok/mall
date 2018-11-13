@@ -25,14 +25,18 @@
             </view>
         </scroll-view>
     </view>
+    <button open-type='share' hidden='true'>{{fromid}}</button>
     <view class="goods-container">
-        <view class="goods-box" wx:for-items="{{goods}}" wx:key="{{index}}" bindtap="toDetailsTap" data-id="{{item.id}}">
-            <view class="img-box">
-                <image src="{{item.cover}}" class="image" />
+        <view class="goods-box" wx:for-items="{{goods}}" wx:key="{{index}}"  >
+            <view class="img-box" bindtap="toDetailsTap" data-id="{{item.id}}">
+                <image src="{{item.cover[0]}}" class="image" />
             </view>
-            <view class="goods-title">{{item.title}} </view>
+            <view class="goods-title">{{item.title}} 
+            </view>
             <view class="goods-price">¥ {{item.price}}  <text class="goods-price-sel" wx:if="{{item.src_price>=item.price}}"> ¥ {{item.src_price}}</text>
             </view>
+            <button class='goods-addshopcar' bindtap="addShopCar" data-id="{{item.id}}">加入购物车</button>
+
         </view>
     </view>
     <view hidden="{{loadingMoreHidden ? true : false}}" class="no-more-goods">没有更多啦</view>

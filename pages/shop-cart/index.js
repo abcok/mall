@@ -35,16 +35,20 @@ Page({
     });
   },
   onLoad: function () {
+      console.log("on load")
       this.initEleWidth();
-      this.onshow();
+      //this.onshow();
   },
-  onshow: function(){
+  onShow: function(){
+      console.log("on show")
+      //this.onLoad();
       var shopList = [];
       // 获取购物车数据
       var shopCarInfoMem = wx.getStorageSync('shopCarInfo');
       if (shopCarInfoMem && shopCarInfoMem.shopList) {
         shopList = shopCarInfoMem.shopList
       }
+      console.log("ge shopcar info:", shopCarInfoMem)
       this.data.goodsList.list = shopList;
       this.setGoodsList(this.getSaveHide(),this.totalPrice(),this.allSelect(),this.noSelect(),shopList);
   },

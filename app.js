@@ -4,6 +4,7 @@ App({
         var that = this;
         //  设置商城名称
         wx.setStorageSync('mallName', "精选仓");
+        wx.showShareMenu()
         this.login();
     },
     login: function() {

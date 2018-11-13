@@ -3,6 +3,8 @@
 var app = getApp()
 var hostname = 'https://www.aigeming.com'
 //var hostname = 'http://39.105.169.87'
+var addshopcar = require('../../utils/addshopcar.js');
+
 var port = 1080
 Page({
     data: {
@@ -12,8 +14,12 @@ Page({
         duration: 1000,
         loadingHidden: false, // loading
         userInfo: {},
+        goodsInfoMap: {},
+        shopCarInfo: {},
+        shopNum:0,
         images: [],
         ids: [],
+        fromid: 0,
         swiperCurrent: 0,
         selectCurrent: 0,
         categories: [],
@@ -60,9 +66,14 @@ Page({
             scrollTop: e.detail.scrollTop
         })
     },
-    onLoad: function() {
-        console.log('onLoad')
+    onLoad: function(e) {
+        console.log('onLoad:',e)
+        wx.showShareMenu()
+
         var that = this
+        that.setData({
+            fromid:e.id
+        })
         wx.setNavigationBarTitle({
             title: wx.getStorageSync('mallName')
         })
@@ -75,6 +86,16 @@ Page({
           })
         })
         */
+        // 获取购物车数据
+        wx.getStorage({
+            key: 'shopCarInfo',
+            success: function (res) {
+                that.setData({
+                    shopCarInfo: res.data,
+                    shopNum: res.data.shopNum
+                });
+            }
+        })
         wx.request({
             url: hostname + '/banner?homeid=1&pid_db=1&brief_db=2&pid=1&detail_db=3',
             data: {
@@ -110,10 +131,51 @@ Page({
                     categories: categories,
                     activeCategoryId: 0
                 });
+               
                 that.getGoodsList(0);
             }
         })
 
+    },
+    addShopCar: function(e){
+        var that = this
+        var id = String(e.currentTarget.dataset.id)
+        console.log("goods map:", this.data.goodsInfoMap)
+        var tmpMap = this.data.goodsInfoMap
+        console.log("------0-----")
+        if (tmpMap.hasOwnProperty(id)){
+            console.log("-------99-------")
+        }
+        var info = tmpMap[id]
+        console.log("------1-----")
+        var GoodsInfo = {
+            goodsDetail: info,
+            selectSizePrice: info.price,
+            buyNumMax: info.stock,
+            buyNumber: (info.buy > 0) ? 1 : 0,
+            shopCarInfo: that.shopCarInfo,
+            id: e.id,
+        };
+        console.log("------2-----")
+        addshopcar.addshopcar(GoodsInfo)
+/*
+        var nstr = wx.getStorageSync(id)
+        var num = 0
+        if (nstr) {
+            num = parseInt(nstr)
+        }
+        console.log("add:", id, "; num:", num, "; nstr:", nstr)
+        num = num + 1
+        try {
+            wx.setStorageSync(id, num)
+        } catch (err) {console.log("err:", err) }
+       
+        wx.showToast({
+            title: '加入购物车成功',
+            icon: 'success',
+            duration: 2000
+        })
+         */
     },
     getGoodsList: function(categoryId) {
 
@@ -136,13 +198,16 @@ Page({
                     });
                     return;
                 }
+                var tmpMap = {}
                 for (var i = 0; i < res.data.data.length; i++) {
-                    console.log("brief:", res.data.data[i])
                     goods.push(res.data.data[i]);
+                    tmpMap[res.data.data[i].id] = res.data.data[i];
                 }
                 that.setData({
                     goods: goods,
+                    goodsInfoMap: tmpMap,
                 });
+                
             }
         })
     }
