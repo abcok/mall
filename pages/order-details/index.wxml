@@ -5,7 +5,8 @@
                 <image class="icon" src="/images/order-details/icon-ddfh.png"></image>
             </view>
             <view class='right-text'>
-                <view class='des1'> 提货地点：{{orderDesc}}
+                <view class='des1'> 提货地点：{{homeaddr}}
+                <text> {{homeusername}}</text>
                 </view>
             </view>
         </view>
@@ -31,7 +32,7 @@
                     <view class="goods-name">{{orderDetail.titles[index]}}</view>
                     <view class="goods-price">¥ {{orderDetail.prices[index]}}</view>
                 </view>
-                
+
             </view>
         </view>
         <view class="btn-row" wx:if="{{orderDetail.orderInfo.status==2}}">

@@ -1,5 +1,15 @@
 /**index.wxss**/
 
+.selecthome {  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 34rpx;
+  border-radius: 98rpx; 
+
+}
+
 .container {
   background-color: #F2f2f2;
   min-height: 100%
@@ -142,3 +152,39 @@ swiper-item image {
   top: 0;
   left: 0;
 }
+
+
+
+.sec-wrap {
+    background-color: #fff;
+    margin-top: 20rpx;
+}
+
+.bottom-fiexd {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.order-status {
+    height: 50rpx;
+    display: flex;
+    flex-direction: row;
+  justify-content: center;
+}
+
+.order-status .icon {
+    width: 50rpx;
+    height: 50rpx;
+}
+.order-status .icon1 {
+    width: 40rpx;
+    height: 40rpx;
+}
+
+.order-status .right-text {
+    overflow: hidden;
+    font-size: 28rpx;
+    color: #000;
+}
+

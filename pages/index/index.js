@@ -8,6 +8,10 @@ var addshopcar = require('../../utils/addshopcar.js');
 var port = 1080
 Page({
     data: {
+        hideList: false,
+        Homename: "选择小区",
+        homeId: 0,
+        homeKey:"",
         indicatorDots: true,
         autoplay: true,
         interval: 3000,
@@ -34,6 +38,14 @@ Page({
             activeCategoryId: e.currentTarget.id
         });
         this.getGoodsList(this.data.activeCategoryId);
+    },
+    selectHome: function(e){
+        console.log("select home:", e)
+        var arg = e.currentTarget.dataset
+        wx.navigateTo({
+            //url: "/pages/home/index?homeid=" + arg.homeid + "&homename=" + arg.homename + "&key=" + arg.key
+            url: "/pages/home/index"
+        })
     },
     //事件处理函数
     swiperchange: function(e) {
@@ -66,14 +78,44 @@ Page({
             scrollTop: e.detail.scrollTop
         })
     },
+    onShow: function(e){
+        var that = this
+        console.log("onshow index")
+        var homeinfo = wx.getStorageSync("homeinfo")
+        if (!homeinfo) {
+            console.log("user homeinfo is null")
+            that.setData({
+                hideList: true,
+            })
+            wx.navigateTo({
+                url: "/pages/home/index"
+            })
+        }
+        var homename = homeinfo.homename
+        that.setData({
+            Homename: homename,
+        })
+        var is = wx.getStorageSync("listflush")
+        if (is == 1){
+            this.requestListBanner()
+            wx.removeStorageSync("listflush")
+        }
+    },
     onLoad: function(e) {
         console.log('onLoad:',e)
         wx.showShareMenu()
-
         var that = this
         that.setData({
-            fromid:e.id
+            fromid: e.id
         })
+        
+        this.requestListBanner()
+
+    },
+    requestListBanner: function(){
+        console.log("requestListBanner")
+        var that = this
+       
         wx.setNavigationBarTitle({
             title: wx.getStorageSync('mallName')
         })
@@ -101,7 +143,7 @@ Page({
             data: {
                 key: 'mallName'
             },
-            success: function(res) {
+            success: function (res) {
                 var images = [];
                 var ids = []
                 for (var i = 0; i < res.data.data.length; i++) {
@@ -113,13 +155,13 @@ Page({
                     ids: ids
                 });
             },
-            fail: function() {
+            fail: function () {
                 console.log("request error")
             }
         })
         wx.request({
             url: hostname + '/img?images=category_all.txt',
-            success: function(res) {
+            success: function (res) {
                 var categories = [{
                     id: 0,
                     name: "今日特价"
@@ -131,23 +173,17 @@ Page({
                     categories: categories,
                     activeCategoryId: 0
                 });
-               
+
                 that.getGoodsList(0);
             }
         })
-
     },
     addShopCar: function(e){
         var that = this
         var id = String(e.currentTarget.dataset.id)
         console.log("goods map:", this.data.goodsInfoMap)
-        var tmpMap = this.data.goodsInfoMap
-        console.log("------0-----")
-        if (tmpMap.hasOwnProperty(id)){
-            console.log("-------99-------")
-        }
+        var tmpMap = this.data.goodsInfoMap        
         var info = tmpMap[id]
-        console.log("------1-----")
         var GoodsInfo = {
             goodsDetail: info,
             selectSizePrice: info.price,
@@ -156,7 +192,6 @@ Page({
             shopCarInfo: that.shopCarInfo,
             id: e.id,
         };
-        console.log("------2-----")
         addshopcar.addshopcar(GoodsInfo)
 /*
         var nstr = wx.getStorageSync(id)

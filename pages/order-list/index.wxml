@@ -23,7 +23,7 @@
                 </view>
             </view>
             <view>
-                <scroll-view class="goods-img-container" scroll-x="true">
+                <scroll-view class="goods-img-container" scroll-x="true" bindtap="orderDetail" data-id="{{item.orderid}}">
                     <view class="img-box" wx:for="{{imagesMap[item.orderid]}}" wx:for-item="i">
                         <image src="{{i}}" class="goods-img"></image>
                     </view>

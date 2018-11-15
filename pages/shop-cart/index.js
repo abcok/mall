@@ -251,6 +251,11 @@ Page({
     },
     toPayOrder:function(){
       console.log("to pay order")
+        var homeinfo = wx.getStorageSync("homeinfo")
+        if (!homeinfo){
+            console.log("homeinfo is null")
+            
+        }
       wx.showLoading();
       var that = this;
       if (this.data.goodsList.noSelect) {

@@ -8,7 +8,9 @@
     "pages/address-add/index",
     "pages/order-list/index",
     "pages/order-details/index",
-    "pages/wuliu/index"
+    "pages/wuliu/index",
+        "pages/home/index"
+        
   ],
   "window":{
     "backgroundTextStyle":"light",

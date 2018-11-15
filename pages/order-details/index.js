@@ -4,7 +4,9 @@ Page({
         orderId: 0,
         goodsList: [],
         yunPrice: app.globalData.yunPrice,
-        orderDesc: app.globalData.loacal,
+        homename: "",
+        homeid:0,
+        homekey:"",
         titles: [],
         images: [],
         orderDetail: {},
@@ -14,9 +16,14 @@ Page({
         console.log("onLoad=", e.id)
         var orderId = e.id;
         this.data.orderId = orderId;
-
+        var homename = wx.getStorageSync("homename")
+        var homeid = wx.getStorageSync("homeid")
+        var homekey = wx.getStorageSync("homekey")
         this.setData({
-            orderId: orderId
+            orderId: orderId,
+            homename: homename,
+            homekey: homekey,
+            homeid:homeid,
         });
     },
     onShow: function() {
@@ -56,6 +63,8 @@ Page({
                     images: info.imgs,
                     prices: info.prices,
                     orderDetail: info,
+                    homeaddr: info.homeaddr,
+                    homeusername: info.homeusername
                 });
             }
         })

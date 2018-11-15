@@ -94,6 +94,11 @@ Page({
 
         var openid = app.globalData.openid;
         var fee = (that.data.allGoodsPrice + that.data.fare) * 100;
+        fee = fee.toFixed(0)
+        console.log("fee:", fee)
+        var homeinfo = wx.getStorageSync("homeinfo")
+        
+        console.log("homeinfo:", homeinfo)
         var postData = {
             token: loginToken,
             openid: openid,
@@ -108,6 +113,13 @@ Page({
             fare: that.data.fare,
             goodsprice: that.data.allGoodsPrice * 100,
             needgoodsinfo: 1,
+
+            homeid: homeinfo.homeid,
+            homename: homeinfo.homename,
+            homekey: homeinfo.key,
+            homephone: homeinfo.phone,
+            homeusername: homeinfo.username,
+            homeaddr:homeinfo.addr
         };
         wxpay.wxpay(app, postData.total_fee, "/pages/order-list/index", postData, true);
     },
