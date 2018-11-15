@@ -1,0 +1,3 @@
+ <view class='wrapper'> 
+  <list-html data="{{home}}" binddetail="bindtap" search="{{value}}"></list-html>
+ </view> 
