@@ -37,13 +37,16 @@ Page({
         this.setData({
             activeCategoryId: e.currentTarget.id
         });
-        this.getGoodsList(this.data.activeCategoryId);
+        if (this.data.activeCategoryId==2){
+            this.showCouponInfo();
+        } else{
+            this.getGoodsList(this.data.activeCategoryId);
+        }
     },
     selectHome: function(e){
         console.log("select home:", e)
         var arg = e.currentTarget.dataset
         wx.navigateTo({
-            //url: "/pages/home/index?homeid=" + arg.homeid + "&homename=" + arg.homename + "&key=" + arg.key
             url: "/pages/home/index"
         })
     },
@@ -94,6 +97,7 @@ Page({
         var homename = homeinfo.homename
         that.setData({
             Homename: homename,
+            hideList: false,
         })
         var is = wx.getStorageSync("listflush")
         if (is == 1){
@@ -105,17 +109,29 @@ Page({
         console.log('onLoad:',e)
         wx.showShareMenu()
         var that = this
-        that.setData({
-            fromid: e.id
-        })
         
         this.requestListBanner()
+        this.getCouponInfo()
+    },
+    getCouponInfo: function(){
+        var that = this
+
+        wx.request({
+            url: 'http://39.105.169.87:1080/couponinfo?uid=',
+            success: function (res) {
+                console.log('coupon res:', res)
+                that.setData({
+                    couponList: res.data.coupon
+                })
+            }
+
+        })
+
 
     },
     requestListBanner: function(){
         console.log("requestListBanner")
         var that = this
-       
         wx.setNavigationBarTitle({
             title: wx.getStorageSync('mallName')
         })
@@ -144,6 +160,7 @@ Page({
                 key: 'mallName'
             },
             success: function (res) {
+                console.log("request banner:", res)
                 var images = [];
                 var ids = []
                 for (var i = 0; i < res.data.data.length; i++) {
@@ -162,6 +179,8 @@ Page({
         wx.request({
             url: hostname + '/img?images=category_all.txt',
             success: function (res) {
+                console.log("request list:", res)
+
                 var categories = [{
                     id: 0,
                     name: "今日特价"
@@ -173,7 +192,6 @@ Page({
                     categories: categories,
                     activeCategoryId: 0
                 });
-
                 that.getGoodsList(0);
             }
         })
@@ -184,11 +202,14 @@ Page({
         console.log("goods map:", this.data.goodsInfoMap)
         var tmpMap = this.data.goodsInfoMap        
         var info = tmpMap[id]
+        console.log("list info:", info)
+        var canBuyNum = info.stock-info.buy
         var GoodsInfo = {
             goodsDetail: info,
             selectSizePrice: info.price,
             buyNumMax: info.stock,
             buyNumber: (info.buy > 0) ? 1 : 0,
+            canBuyNum: canBuyNum,
             shopCarInfo: that.shopCarInfo,
             id: e.id,
         };
@@ -222,6 +243,7 @@ Page({
                 categoryId: categoryId
             },
             success: function(res) {
+                console.log("list resutl:", res)
                 that.setData({
                     goods: [],
                     loadingMoreHidden: true
@@ -245,5 +267,29 @@ Page({
                 
             }
         })
+    },
+    onShareAppMessage: function(){
+        var ctype = "1"
+        var ttl = "300"
+        console.log("toshare")
+        var d = new Date();
+        var date = d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate()
+        console.log("date:", date)
+        var dshared = wx.getStorageSync("shared")
+        console.log("shared:", dshared, "; date:", date)
+        if (dshared== undefined || dshared != date ){
+        wx.request({
+            url: 'http://39.105.169.87:1080/coupon?homeid=1&openid=' + app.globalData.openid + '&rtype=set&id=' + ctype + '&ttl=' + ttl,
+            success: function (res) {
+                if (res.data.ec == 0){
+                    wx.showModal({
+                        title: '分享成功',
+                        content: '获得一张配送券',
+                    })
+                    wx.setStorageSync("shared", date)
+                }
+            }
+        })
+        }
     }
 })

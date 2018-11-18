@@ -32,9 +32,9 @@
             </view>
             <view class="price-box">
                 <view class="total-price">合计：¥ {{item.total_rmb}}</view>
-                <view class="btn delete-btn" hidden="{{item.status==2? fslse : true}}" bindtap="cancelOrderTap" data-id="{{item.orderid}}">删除订单</view>
-                <view class="btn topay-btn" hidden="{{item.status==2? fslse : true}}" bindtap="toPayTap" data-id="{{item.orderid}}" data-money="{{item.total_fee}}">支付</view>
-                                <view class="btn cancel-btn" hidden="{{item.status==1? fslse : true}}" bindtap="cancelOrderTap" data-id="{{item.orderid}}">取消订单</view>
+                <view class="btn delete-btn" hidden="{{item.status==2? false : true}}" bindtap="cancelOrderTap" data-id="{{item.orderid}}">删除订单</view>
+                <view class="btn topay-btn" hidden="{{item.status==2? false : true}}" bindtap="toPayTap" data-id="{{item.orderid}}" data-money="{{item.total_fee}}">支付</view>
+                                <view class="btn cancel-btn" hidden="{{item.status==4? false : true}}" bindtap="DoneOrderTap" data-id="{{item.orderid}}">确认收货</view>
 
             </view>
         </view>

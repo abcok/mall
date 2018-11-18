@@ -3,7 +3,7 @@ function addshopcar(data) {
     var shopcarKey = 'shopCarInfo';
     var shopCarInfo = wx.getStorageSync(shopcarKey)
 
-    if (data.buyNumber < 1) {
+    if (data.canBuyNum < 1) {
         wx.showModal({
             title: '提示',
             content: '暂时缺货哦~',

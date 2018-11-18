@@ -6,7 +6,7 @@
             </view>
             <view class='right-text'>
                 <view class='des1'> 提货地点：{{homeaddr}}
-                <text> {{homeusername}}</text>
+                    <text> {{homeusername}}</text>
                 </view>
             </view>
         </view>
@@ -53,6 +53,8 @@
             <view class="row-label">应付总额</view>
             <view class="right-text">¥ {{totalPrice}}</view>
         </view>
+        <view class="cancel-box" bindtap="cancelOrderTap" data-id="{{orderId}}">
+            <button class='cancel'> 取消订单</button>
+        </view>
     </view>
-
 </view>

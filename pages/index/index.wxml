@@ -1,16 +1,16 @@
 <!--index.wxml-->
 <!--1px = 750/320 = 2.34rpx;-->
 
-    <view class="sec-wrap">
+<view class="sec-wrap">
 
-<view class="order-status" hidden='{{hideList}}' bindtap='selectHome'>
-    <image class="icon" src="/images/icon-addr.png"></image>
-<view class='right-text'>
-    {{Homename}}
-</view>
-    <image class="icon1" src="/images/icon-addr-modify.png"></image>
+    <view class="order-status" hidden='{{hideList}}' bindtap='selectHome'>
+        <image class="icon" src="/images/icon-addr.png"></image>
+        <view class='right-text'>
+            {{Homename}}
+        </view>
+        <image class="icon1" src="/images/icon-addr-modify.png"></image>
 
-</view>
+    </view>
 </view>
 <view class="container" hidden='{{hideList}}'>
     <view class="swiper-container">
@@ -27,6 +27,15 @@
             </block>
         </view>
     </view>
+    <view class='notic'>
+        <view class='notic-center'>
+            <text class='notic-center-text'>每天</text>
+            <text class='notic-text-inner'>分享</text>
+            <text class='notic-center-text'>都会得到一张</text>
+            <text class='notic-text-inner'>送货上门券 </text>
+        </view>
+
+    </view>
 
     <view class="type-container">
         <scroll-view class="type-navbar" scroll-x="true" style="width: 100%">
@@ -37,8 +46,9 @@
             </view>
         </scroll-view>
     </view>
-    <button open-type='share' hidden='true'>{{fromid}}</button>
+    <button open-type='share' hidden='false'>share</button>
     <view class="goods-container">
+
         <view class="goods-box" wx:for-items="{{goods}}" wx:key="{{index}}">
             <view class="img-box" bindtap="toDetailsTap" data-id="{{item.id}}">
                 <image src="{{item.cover[0]}}" class="image" />
@@ -48,9 +58,19 @@
             <view class="goods-price">¥ {{item.price}}
                 <text class="goods-price-sel" wx:if="{{item.src_price>=item.price}}"> ¥ {{item.src_price}}</text>
             </view>
+            <view class="goods-sale" hidden='true'>已售{{item.price}}</view>
+            <view class='goods-icon'>
+                <image class='goods-icon-hot' src='/images/hot1.jpg'></image>
+                <image class='goods-icon-cirida' src='/images/cirida.png'></image>
+
+                <image class='goods-icon-hot' hidden='true' src='/images/tiantiantejia.png'></image>
+            </view>
             <button class='goods-addshopcar' bindtap="addShopCar" data-id="{{item.id}}">加入购物车</button>
 
         </view>
     </view>
+    <button open-type='share'>
+        <image class="share-button" src="/images/share1.png"></image>
+    </button>
     <view hidden="{{loadingMoreHidden ? true : false}}" class="no-more-goods">没有更多啦</view>
 </view>

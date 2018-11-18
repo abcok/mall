@@ -10,11 +10,51 @@ Page({
         isNeedLogistics: 0, // 是否需要物流信息
         allGoodsPrice: 0,
         fare: 0,
+        reduce_amount:0,
         sendToRoom: false,
-        goodsJsonStr: ""
+        goodsJsonStr: "",
+        roomid: "例如：4号楼1单元602 或 4-1-602",
+        phone: "手机号",
+        username: "姓名",
+        fare_coupon_info:""
     },
     onShow: function() {
         this.initShippingAddress();
+        var username = wx.getStorageSync("username")
+        if (username){
+            this.setData({
+                username: username,
+            })
+        }
+        var phone = wx.getStorageSync("phone")
+        if (phone) {
+            this.setData({
+                phone: phone,
+            })
+        }
+        var roomid = wx.getStorageSync("roomid")
+        if (roomid) {
+            this.setData({
+                roomid: roomid,
+            })
+        }
+        var coupons = wx.getStorageSync("has_coupon")
+        console.log("couponinfos:", coupons[0].coupon_status)
+        var fare_coupon_info = ""
+        var endtime = "zzzzzzzzzzzzzz"
+        for (var i = 0; i < coupons.length; i++) {
+            var c = coupons[i]
+            if (c.coupon_status == 1 && c.use_end_date < endtime) {
+                fare_coupon_info = c
+                endtime = c.use_end_date
+            }
+        }
+        var reduce_amount = fare_coupon_info.reduce_amount
+        var couponkey = fare_coupon_info
+        this.setData({
+            fare_coupon_info: fare_coupon_info,
+            reduce_amount: reduce_amount
+        })
     },
     onLoad: function(e) {
         console.log("to pay order start")
@@ -60,12 +100,14 @@ Page({
     createOrder: function(e) {
         console.log("create order start")
         var that = this;
-        var status = 1;
         var loginToken = app.globalData.token // 用户登录 token
         var remark = e.detail.value.remark; // 备注信息
         var username = e.detail.value.username;
         var phone = e.detail.value.phone;
         var roomid = e.detail.value.roomid;
+        if (username == ""){
+            username = wx.getStorageSync("username")
+        }
         if (username == "") {
             wx.showModal({
                 title: '错误',
@@ -73,6 +115,10 @@ Page({
                 showCancel: false
             })
             return
+        }
+        wx.setStorageSync("username", username)
+        if (phone == "") {
+            phone = wx.getStorageSync("phone")
         }
         if (phone == "" || phone.length != 11) {
             wx.showModal({
@@ -82,6 +128,10 @@ Page({
             })
             return
         }
+        wx.setStorageSync("phone", phone)
+        if (roomid == "") {
+            roomid = wx.getStorageSync("roomid")
+        }
         if (roomid == "") {
             wx.showModal({
                 title: '错误',
@@ -90,8 +140,10 @@ Page({
             })
             return
         }
-        wx.showLoading();
+        wx.setStorageSync("roomid", roomid)
 
+        wx.showLoading();
+        
         var openid = app.globalData.openid;
         var fee = (that.data.allGoodsPrice + that.data.fare) * 100;
         fee = fee.toFixed(0)
@@ -113,12 +165,12 @@ Page({
             fare: that.data.fare,
             goodsprice: that.data.allGoodsPrice * 100,
             needgoodsinfo: 1,
-
             homeid: homeinfo.homeid,
             homename: homeinfo.homename,
             homekey: homeinfo.key,
             homephone: homeinfo.phone,
             homeusername: homeinfo.username,
+            scoupon: that.data.fare_coupon_info.sttl,
             homeaddr:homeinfo.addr
         };
         wxpay.wxpay(app, postData.total_fee, "/pages/order-list/index", postData, true);
@@ -156,7 +208,8 @@ Page({
         var fare = 0
         var isSelect = e.detail.value
         if (isSelect) {
-            fare = app.globalData.yunPrice
+            fare = app.globalData.yunPrice - that.data.reduce_amount
+            
         }
         that.setData({
             sendToRoom: isSelect,

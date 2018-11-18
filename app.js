@@ -45,9 +45,23 @@ App({
                         that.globalData.token = res.data.access_token;
                         that.globalData.openid = res.data.openid;
                         console.log("shiqi.debug openid:", that.globalData.openid)
+                        wx.setStorageSync("token", res.data.access_token)
 
                     }
                 })
+            }
+        })
+        wx.request({
+            url: 'http://39.105.169.87:1080/couponinfo?homeid=',
+            success: function(res){
+                var couponinfo = res.data.coupon
+                console.log("couponinfo:", couponinfo)
+                for (let i = 0; i < couponinfo.length; i++) {
+                    var info = couponinfo[i]
+                    var id = info.id
+                    var key = "coupon_" + id
+                    wx.setStorageSync(key, info)
+                }
             }
         })
     },
@@ -79,7 +93,6 @@ App({
         })
     },
     globalData: {
-        userInfo: null,
         subDomain: "mall",
         yunPrice: 3, //yuan
         hostname: 'https://www.aigeming.com',
@@ -89,5 +102,11 @@ App({
         orderDoneStatus:1,  //订单完成状态
         orderPrepayStatus:2,  //订单待支付状态
         orderDelStatus: 3,  //订单删除状态
+        orderPrecollectStatus: 4,  //订单待支付状态
+        userInfo: {
+            nickName: '点击登录',
+            userName: 'qdb',
+            avatarUrl: 'https://platform-wxmall.oss-cn-beijing.aliyuncs.com/upload/20180727/150547696d798c.png'
+        },
     }
 })

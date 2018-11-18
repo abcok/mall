@@ -70,5 +70,29 @@ Page({
         })
 
     },
+    cancelOrderTap: function (e) {
+        var that = this;
+        var orderId = e.currentTarget.dataset.id;
+        console.log("cancel orderid:", orderId)
+        wx.showModal({
+            title: '确定要删除该订单吗？',
+            content: '',
+            success: function (res) {
+                if (res.confirm) {
+                    wx.showLoading();
+                    wx.request({
+                        url: 'https://www.aigeming.com/orderstatus?orderid=' + orderId + "&status=" + app.globalData.orderDelStatus,
+                        success: (res) => {
+                            wx.hideLoading();
+                            console.log("cancel result:", res)
+                            if (res.data.ec == 0) {
+                                that.onShow();
+                            }
+                        }
+                    })
+                }
+            }
+        })
+    }
 
 })

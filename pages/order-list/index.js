@@ -3,7 +3,7 @@ var app = getApp()
 Page({
     data: {
         //statusType:["全部","待付款","待发货","待收货","已完成"],
-        statusType: ["已完成", "待付款"],
+        statusType: ["已完成", "待付款", "待收货"],
         currentType: 0,
         tabClass: ["", ""],
         imagesMap: {},
@@ -24,26 +24,17 @@ Page({
             url: "/pages/order-details/index?id=" + orderId
         })
     },
-    cancelOrderTap: function(e) {
+    DoneOrderTap: function(e) {
         var that = this;
         var orderId = e.currentTarget.dataset.id;
         console.log("cancel orderid:", orderId)
-        wx.showModal({
-            title: '确定要删除该订单吗？',
-            content: '',
-            success: function(res) {
-                if (res.confirm) {
-                    wx.showLoading();
-                    wx.request({
-                        url: 'https://www.aigeming.com/orderstatus?orderid=' + orderId + "&status=" + app.globalData.orderPrepayStatus,
-                        success: (res) => {
-                            wx.hideLoading();
-                            console.log("cancel result:", res)
-                            if (res.data.ec == 0) {
-                                that.onShow();
-                            }
-                        }
-                    })
+        wx.showLoading();
+        wx.request({
+            url: 'https://www.aigeming.com/orderstatus?orderid=' + orderId + "&status=" + app.globalData.orderDoneStatus,
+            success: (res) => {
+                wx.hideLoading();
+                if (res.data.ec == 0) {
+                    that.onShow();
                 }
             }
         })
@@ -54,8 +45,8 @@ Page({
         console.log("topayTap:", orderId, money)
         var postData = {
             orderid: orderId,
-            needgoodsinfo: 0,
             total_fee: money,
+            needgoodsinfo: 0,
         };
         wxpay.wxpay(app, money, "/pages/order-list/index", postData, false);
         
@@ -77,11 +68,12 @@ Page({
             openid: app.globalData.openid,
             //status: 0, //2：待支付；1：已完成
         };
-        if (this.data.currentType == 1) {
-            postData.status = 2
-        }
         if (this.data.currentType == 0) {
             postData.status = 1
+        } else if (this.data.currentType == 1) {
+            postData.status = 2
+        }else if (this.data.currentType == 2) {
+            postData.status = 4
         }
         wx.request({
             url: 'https://www.aigeming.com/orderlist?openid=' + postData.openid + '&status=' + postData.status,
@@ -122,8 +114,6 @@ Page({
                         orderList: res.data.data,
                         imagesMap: that.data.imagesMap,
                         isEmpty: empty
-                        //logisticsMap : res.data.data.logisticsMap,
-                        //goodsMap : res.data.data.goodsMap
                     });
                 } else {
                     this.setData({

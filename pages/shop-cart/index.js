@@ -1,4 +1,6 @@
 //index.js
+const cc = require('../../utils/coupon.js');
+
 var app = getApp()
 var hostname = 'https://www.aigeming.com'
 
@@ -51,6 +53,8 @@ Page({
       console.log("ge shopcar info:", shopCarInfoMem)
       this.data.goodsList.list = shopList;
       this.setGoodsList(this.getSaveHide(),this.totalPrice(),this.allSelect(),this.noSelect(),shopList);
+      cc.loadListData(app.globalData.openid)
+
   },
   toIndexPage:function(){
       wx.switchTab({

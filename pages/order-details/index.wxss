@@ -309,6 +309,22 @@ page {
 .goods-info .row-box .right-text {
     text-align: right;
 }
+.cancel-box {
+display: flex;
+flex-direction: row;
+  justify-content: center;
+      width: 100%;
+    color: rgb(161, 155, 151);
+    text-align: right;
+}
+.cancel {
+display: flex;
+flex-direction: row;
+  justify-content: center;
+      width: 100%;
+    color: rgb(236, 11, 11);
+    text-align: right;
+}
 
 .jiesuan-box {
     display: flex;

@@ -6,9 +6,10 @@ function wxpay(app, money, redirectUrl, postData, rmShopCar) {
             'content-type': 'application/x-www-form-urlencoded',
         },
         data: postData, // 设置请求的 参数
-
+        
         success: (res) => {
             wx.hideLoading();
+            console.log("pay post data:", postData)
             console.log("create:", res.data);
             if (res.data.code != 0) {
                 wx.showModal({
@@ -25,7 +26,7 @@ function wxpay(app, money, redirectUrl, postData, rmShopCar) {
                 sign: res.data.sign,
                 signType: res.data.signType,
                 pacakge: res.data.package,
-                
+                orderid: res.data.orderid,
             }
 
             wx.requestPayment({
@@ -39,17 +40,18 @@ function wxpay(app, money, redirectUrl, postData, rmShopCar) {
                     wx.showToast({
                         title: '支付成功',
                     })
-                    if (postData.needgoodsinfo == 0) {
-                        var orderid = postData.orderid
-                        wx.request({
-                            url: 'https://www.aigeming.com/orderstatus?orderid=' + orderid + "&status=" + app.globalData.orderDoneStatus,
-                            success: (res) => {
-                                wx.hideLoading();
-                                
-                            }
-                        })
-                    }
-
+                    var orderid = payInfo.orderid
+                    console.log("ordierid:", orderid, "; status:", app.globalData.orderPrecollectStatus)
+                    wx.request({
+                        url: 'https://www.aigeming.com/orderstatus?orderid=' + orderid + "&status=" + app.globalData.orderPrecollectStatus,
+                        success: (res) => {
+                            wx.hideLoading();
+                        console.log("order done")
+                        }
+                    })
+                    wx.request({
+                        url: 'https://www.aigeming.com/coupon?openid=' + app.globalData.openid + '&rtype=del&key=' + postData.scoupon,
+                    })
                 },
                 fail: function(res) {
                     console.log("payment fail:", res)
@@ -68,9 +70,10 @@ function wxpay(app, money, redirectUrl, postData, rmShopCar) {
                 wx.removeStorageSync('shopCarInfo');
             }
             // 下单成功，跳转到订单管理界面
-            wx.reLaunch({
+            wx.navigateTo({
                 url: redirectUrl
-            });
+            })
+          
         }
     })
 }

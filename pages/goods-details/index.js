@@ -21,6 +21,7 @@ Page({
         buyNumMin: 0,
         buyNumMax: 0,
         id: 1,
+        homePic:"images/nav/home-on.png",
         propertyChildIds: "",
         propertyChildNames: "",
         canSubmit: false, //  选中规格尺寸时候是否允许加入购物车
